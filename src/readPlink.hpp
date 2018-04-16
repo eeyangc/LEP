@@ -147,7 +147,6 @@ public:
     vector<string> gwasidentifiers;
     map< string, vector <string> > config;
     void convert(){
-        clock_t t1 = clock();
         if(this -> type == zvalue_v){
             float zvalue = 0;
             for(uword i = 0; i < lpsummary ->n_rows; i++){
@@ -158,7 +157,6 @@ public:
                 }
             }
         }
-        //cout << "Convert z-value to p-value, time elapsed " << (clock() - t1) / CLOCKS_PER_SEC << endl;
     }
     Summary();
     Summary(vector<string>& snps, mat* lp_summary);

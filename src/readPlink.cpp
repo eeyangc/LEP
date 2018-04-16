@@ -42,8 +42,8 @@ GenoInfo::GenoInfo(string stringname) {
     Chroms chroms(bimfile, P);
     int phenotype_pos = 5;
     vec y = read_phenotypes(famfile, N, phenotype_pos);
-
-    unsigned* X = new unsigned[ N * P];
+    long long size = (long long)N * (long long)P;
+    unsigned* X = new unsigned[ size];
     t1 = clock();
     readPlink(stringname,N, P, X);
     arma::Mat<unsigned>* Xdata = new arma::Mat<unsigned>(X, N, P, false,false);
@@ -97,14 +97,11 @@ vec read_phenotypes(string filename, int N, int phenopos){
     float pheno = 0;
     string tmp_str;
     int idx = 0;
-    // int phenopos = 5;
- //   cout <<"phenopos=" << phenopos << endl;
     while(std::getline(ifs, line)) // read one line from ifs
     {
         std::istringstream iss(line); // access line as a stream
         vector<string> fields;
         boost::split( fields, line, boost::is_any_of(" \t"));
-    //    cout << fields[phenopos] << endl;
         pheno = (double)atof(fields[phenopos].c_str());
         y[idx] = pheno;
         idx++;
@@ -192,106 +189,17 @@ void Summary::cal_overlap(GenoInfo& genoinfo)
 }
 
 
-
-
-// Summary::Summary(string summaryfile, vector<string> identifiers, string snpidentifier,
-//                  string chromidentifier){
-//     this -> chrom_no = 1;
-//     cout << "loading summary data...." << endl;
-//     cout << "summaryfile =" << summaryfile << endl;
-//     this -> P = getLineNum(summaryfile) - 1;
-//     std::ifstream ifs(summaryfile.c_str());
-//     std::string line;
-//     std::getline(ifs, line);
-//     vector <string> fields;
-//     boost::split( fields, line, boost::is_any_of(" \t *"));
-//
-//     identifiers.push_back(chromidentifier);
-//     identifiers.push_back(snpidentifier);
-//
-//     Col<int> pos = getPositions(fields, identifiers);
-//     clock_t t1 = clock();
-//     uword snp_index = pos[pos.size()-1];
-//     int chr_index = pos[pos.size()-2];
-//     this -> chroms = new Chroms(P);
-//     if(chr_index == -1){
-//         this -> chroms -> chrom_no = 1;
-//     }
-//
-//     pos.set_size(pos.size()-2);
-//     gwasidentifiers = identifiers;
-//     //to fill the missing value to random numbers for z-value and p-value version respectively
-//     if(this -> type == zvalue_v)
-//         lpsummary = new Mat<double>(P, pos.size(), fill::randn);
-//     else
-//         lpsummary = new Mat<double>(P, pos.size(), fill::randu);
-//     for(uword i = 0; i < (uword)P; i++)
-//     {
-//         std::getline(ifs, line);
-//         boost::split( fields, line, boost::is_any_of(" \t *"));
-//         int chrom_id = 1;
-//         if(chr_index != -1){
-//             chrom_id = (int)atoi(fields[chr_index].c_str());
-//         }
-//
-//         this -> chroms -> chromsome[i] = chrom_id;
-//         SNP snp(fields[snp_index], (int)i, from_ss);
-//
-//         this -> chroms -> snps[i] = snp;
-//         for(uword j = 0; j < pos.size(); j++){
-//             if(pos[j] == -1) continue;
-//             string value = fields[pos[j]];
-//             if(value != "NA"){
-//                 float v = (float)atof(value.c_str());
-//                 (*lpsummary)(i,j) = v;
-//             }
-//
-//         }
-//     }
-//
-//
-//     if ( chr_index != -1){
-//         uvec indices = find_unique(this -> chroms -> chromsome);
-//         this -> chrom_no = (int)indices.size();
-//     }
-//     this -> convert();
-//
-//
-//     cout <<"Read summary time is " << (clock() - t1)/CLOCKS_PER_SEC << endl;
-// }
-
-
 Summary::Summary(vector<string>& snps, mat* lp_summary){
   int type = beta_ss;
-
   this -> P = snps.size();
   this -> chroms = new Chroms(P);
-  //lpsummary = new Mat<double>(P, 3);
   this -> type = type;
-  // if(A1 == NULL){
-  //     A1 = new vector<int>();
-  //     for(uword k = 0; k < P; k++){
-  //        A1 -> push_back(1);
-  //     }
-  // }
-  //
-  // if(A2 == NULL){
-  //   A2 = new vector<int>();
-  //   for(uword k = 0; k < P; k++){
-  //     A2 -> push_back(1);
-  //   }
-  // }
   this ->lpsummary = lp_summary;
-  // this -> lp_summary = lp_summary;
   for(uword k = 0; k < P; k++){
     SNP snp(snps[k], k, from_ss);
     this -> chroms -> snps.push_back(snp);
-    //  this -> chroms -> A1Array[k] = (*A1)[k];
-    //  this -> chroms -> A2Array[k] = (*A2)[k];
   }
-
   this -> chrom_no = 1;
-
 }
 
 bool SNP::operator<(const SNP& obj) const{
@@ -312,37 +220,3 @@ bool SNP::operator == (const SNP& obj) const{
 
 
 
-//GenoInfo ReadDataFromFile(string stringname) {
-//  string famfile = stringname;
-//  famfile += ".fam";
-//  string bimfile = stringname;
-//  bimfile += ".bim";
-//
-//  int N =  getLineNum(famfile);
-//  int P =  getLineNum(bimfile);
-//
-//  Chroms chroms = read_snpnames(bimfile, P);
-//  vec y = read_phenotypes(famfile, N);
-//
-//  arma::vec index(22);
-//  double sum2 = 0;
-//  for(int i=1; i <= 22; i++ ){
-//    index[i-1] = chroms.chromsomes[i-1].size(); //sum(*snps.chromsome == i);
-//    sum2 += index[i-1];
-//    cout <<"number of snps in chromsome "<<i <<" =" << index[i-1] << endl;
-//  }
-//  unsigned* X = new unsigned[ N * P];
-//  clock_t t1 = clock();
-//  readPlink(stringname,N, P, X);
-//  cout<<"Finish Reading Plink file, time elapsed:"<< (clock() - t1)*1.0/CLOCKS_PER_SEC << endl;
-//  cout <<"Sample Size =" <<  N << " SNP Number:" << P << endl;
-//  arma::Mat<unsigned>* Xdata = new arma::Mat<unsigned>(X, N, P, false,false);
-// // arma::mat corMat = calCorr(Xdata, index, avbIndex, bandwidth);
-//  GenoInfo obj;
-//  obj.X = *Xdata;
-//  obj.chroms = chroms;
-//  obj.index = index;
-//  obj.y = y;
-//
-//  return obj;
-//}

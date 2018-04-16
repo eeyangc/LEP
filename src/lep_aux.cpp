@@ -197,11 +197,6 @@ double lb_klbeta(Vardist vardist, double sigma2beta){
     return lb;
 }
 
-
-
-
-
-
 //convert local fdr to Global FDR
 vec fdr2FDR(vec fdr){
     uword M = fdr.size();
@@ -215,7 +210,6 @@ vec fdr2FDR(vec fdr){
 
 void get_matrix_pointer(void* lpfX, int N, int P, int type, bool efficient,Mat<double> & Mat_f, void* & X_mat, bool & befloat){
   if(type == type_double){
-    clock_t t1 = clock();
     Mat<double>* X_p = new Mat<double>( static_cast<double *>(lpfX) , N, P, false);
     X_mat = X_p;
     befloat = true;
@@ -240,15 +234,10 @@ Mat<double> cal_means(void* X_mat, bool befloat, int N){
 }
 
 void centering(void* X_mat, vec& y, double& mean_y, mat & SZX, bool befloat, int N, int P){
-  // double mean_y = as_scalar(mean(y)); //mean of y
   SZX =  cal_means(X_mat, befloat, N); //column means of X
   mean_y = as_scalar(mean(y)); //mean of y
   y -= mean_y;
   double* x_mean = SZX.memptr();
-  // for(int i = 0; i < 10; i++){
-  //   cout << x_mean[i] << " ";
-  // }
-  // cout << endl;
   if ( befloat ){
     for(int i = 0; i < P; i++){
       static_cast<Mat<double> *>(X_mat) -> col(i) -= x_mean[i];
@@ -258,9 +247,7 @@ void centering(void* X_mat, vec& y, double& mean_y, mat & SZX, bool befloat, int
 
 vec cal_diagXTX(const vec& y, void* X_mat, bool befloat, const mat& SZX, int N, mat& xty){
   double sum_y = sum(y);
-  //mat xty;
   vec diagXTX;
-  // t1 = clock();
   if( befloat ){
     Mat<double> * mat_f = static_cast<Mat<double> *>(X_mat);
     xty = y.t( ) * (* mat_f);

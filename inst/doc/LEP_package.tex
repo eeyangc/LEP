@@ -104,8 +104,7 @@ R> ncol(X0) == nrow(P0)
 The complete LEP function is,
 \begin{Schunk}
 \begin{Sinput}
-R> fit <- LEP(X, y, SS = NULL, opts = NULL, logfile = "screen", lbPval = 1e-12,
-                                                                    verbose = T)
+R> fit <- LEP(X, y, SS = NULL, opts = NULL, logfile = "screen", lbPval = 1e-12, verbose = T)
 \end{Sinput}
 \end{Schunk}
 
@@ -184,8 +183,8 @@ LEP package also supports the input of binary plink file, which saves huge space
 The complete LEP function is,
 \begin{Schunk}
 \begin{Sinput}
-R> fit <- LEP_Plink(genoplinkfile, SS = NULL, opts = NULL, logfile = "screen",
-                                                    lbPval = 1e-12, verbose = F)
+R> fit <- LEP_Plink(genoplinkfile, SS = NULL, opts = NULL, logfile = "screen", lbPval = 1e-12,
+       verbose = F)
 \end{Sinput}
 \end{Schunk}
 
@@ -241,8 +240,8 @@ R> opts = list(n_fold = 5)
 
 \begin{Schunk}
 \begin{Sinput}
-R> performance <- LEPCV(X, y, SS = NULL, opts = NULL, logfile = "screen", lbPval = 1e-12,
-                                                                         measure = "mse")
+R> performance <- LEPCV(X, y, SS = NULL, opts = NULL, logfile = "screen",
+                        lbPval = 1e-12, measure = "mse")
 \end{Sinput}
 \end{Schunk}
 
@@ -251,7 +250,7 @@ and
 \begin{Schunk}
 \begin{Sinput}
 R> performance <- LEPCV_Plink(plinkfile, SS = NULL, opts = NULL, logfile = "screen",
-                                                         lbPval = 1e-12, measure = "mse")
+                         lbPval = 1e-12, measure = "mse")
 \end{Sinput}
 \end{Schunk}
 
@@ -270,7 +269,7 @@ R>   print(performance)
 \end{Sinput}
 \begin{Soutput}
 $mse
-[1] 0.2093465
+[1] 0.2108222
 \end{Soutput}
 \end{Schunk}
 
@@ -282,7 +281,7 @@ R>   print(performance)
 \end{Sinput}
 \begin{Soutput}
 $auc
-[1] 0.795536
+[1] 0.807288
 \end{Soutput}
 \end{Schunk}
 
