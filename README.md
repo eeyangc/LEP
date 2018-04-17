@@ -6,7 +6,7 @@ LEP is a statistical approach to integrating individual level genotype data and 
 Usage
 =======
 
-The file LEP_package.pdf in inst/doc shows detail example of how to use LEP package.
+The file LEP_package.pdf in inst/doc shows several examplex of how to use LEP package.
 
 
 Development 
